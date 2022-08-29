@@ -32,10 +32,10 @@ import org.springframework.web.client.RestTemplate;
 @ActiveProfiles("testUnit")
 @TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest()
-class TMDBApiTestsLambda {
+class TmdbApiTests {
 
   @MockBean RestTemplate restTemplate;
-  @Autowired TMDBApi tmdbApi;
+  @Autowired TmdbApi tmdbApi;
   String movieId = "123";
   String expectedUrl = "apiUrl/movie/123";
 

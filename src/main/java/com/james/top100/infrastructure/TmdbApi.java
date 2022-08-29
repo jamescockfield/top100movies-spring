@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class TMDBApi {
+public class TmdbApi {
 
   @Autowired RestTemplate restTemplate;
   @Autowired ApplicationProperties applicationProperties;
