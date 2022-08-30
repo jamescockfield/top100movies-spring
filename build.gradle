@@ -21,10 +21,17 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '3.0.0-M4'
 	implementation group: 'org.springframework.security', name: 'spring-security-config', version: '6.0.0-M6'
 	implementation group: 'org.springframework.security', name: 'spring-security-web', version: '6.0.0-M6'
-	implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.0.0-M5'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
 	implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.0.0-M4'
+
+  testImplementation 'com.h2database:h2:2.1.214'
 	testImplementation group: 'org.springframework.boot', name :'spring-boot-starter-test', version :'3.0.0-M4'
+
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+  runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.11.5') {
+      exclude group: 'org.json', module: 'json' //provided by Android natively
+  }
 }
 
 tasks.named('test') {

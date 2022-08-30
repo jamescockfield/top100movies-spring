@@ -7,13 +7,18 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -23,6 +28,9 @@ import org.springframework.web.util.WebUtils;
 public class JwtUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+  private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
+
+  @Autowired private Environment env;
 
   @Value("${jwtCookieName}")
   private String jwtCookieName;
@@ -30,13 +38,26 @@ public class JwtUtils {
   @Value("${jwtExpirationMs}")
   private int jwtExpirationMs;
 
-  private Key jwtSigningKey;
+  @Value("${jwtSigningKey}")
+  private String jwtSigningKeyString;
+
+  private SecretKey jwtSigningKey;
   private JwtParser jwtParser;
 
-  public JwtUtils(@Value("${jwtSigningKey}") Key jwtSigningKey) {
-    jwtParser = Jwts.parserBuilder().setSigningKey(jwtSigningKey).build();
+  @PostConstruct
+  private void postConstruct() {
+    jwtSigningKey = getSigningKeyFromString(jwtSigningKeyString);
 
-    this.jwtSigningKey = jwtSigningKey;
+    jwtParser = Jwts.parserBuilder().setSigningKey(jwtSigningKey).build();
+  }
+
+  private SecretKey getSigningKeyFromString(String encodedKey) {
+    System.out.println(String.format("env: %s", env));
+    System.out.println(String.format("ENCODED KEY: %s", encodedKey));
+    byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
+    SecretKey signingKey = new SecretKeySpec(decodedKey, signatureAlgorithm.toString());
+
+    return signingKey;
   }
 
   public String getJwtFromCookies(HttpServletRequest request) {
@@ -92,7 +113,7 @@ public class JwtUtils {
             .setSubject(username)
             .setIssuedAt(issuedAt)
             .setExpiration(expiration)
-            .signWith(this.jwtSigningKey, SignatureAlgorithm.HS512)
+            .signWith(jwtSigningKey, signatureAlgorithm)
             .compact();
 
     return token;
