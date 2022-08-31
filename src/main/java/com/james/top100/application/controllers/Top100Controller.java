@@ -1,4 +1,4 @@
-package com.james.top100.application;
+package com.james.top100.application.controllers;
 
 import com.james.top100.infrastructure.TmdbApi;
 import org.springframework.beans.factory.annotation.Autowired;

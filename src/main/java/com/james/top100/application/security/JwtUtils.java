@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
@@ -95,8 +94,7 @@ public class JwtUtils {
     return false;
   }
 
-  public ResponseCookie generateJwtCookie(UserDetails userDetails) {
-    String username = userDetails.getUsername();
+  public ResponseCookie generateJwtCookie(String username) {
     String jwt = generateTokenFromUsername(username);
 
     ResponseCookie cookie = ResponseCookie.from(jwtCookieName, jwt).build();
