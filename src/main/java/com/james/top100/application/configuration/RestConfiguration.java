@@ -9,14 +9,14 @@ import org.springframework.web.client.RestTemplate;
 class RestConfiguration {
 
   @Bean
-  public RestTemplate restTemplate() {
+  public RestTemplate restTemplateBean() {
     RestTemplate restTemplate = new RestTemplate();
 
     return restTemplate;
   }
 
   @Bean
-  public ApplicationProperties applicationProperties() {
+  public ApplicationProperties applicationPropertiesBean() {
     ApplicationProperties properties = new ApplicationProperties();
 
     return properties;

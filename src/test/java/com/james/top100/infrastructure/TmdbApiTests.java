@@ -31,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
 
 @ActiveProfiles("testUnit")
 @TestInstance(Lifecycle.PER_CLASS)
-@SpringBootTest()
+@SpringBootTest
 class TmdbApiTests {
 
   @MockBean RestTemplate restTemplate;
@@ -54,6 +54,7 @@ class TmdbApiTests {
         .andRespond(withSuccess(movieData.toString(), MediaType.APPLICATION_JSON));
   }
 
+  // TODO: probably not needed until we add failure cases
   @BeforeEach
   void beforeEach() {
     Mockito.clearInvocations(restTemplate);
