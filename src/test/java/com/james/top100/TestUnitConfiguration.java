@@ -1,18 +1,20 @@
 package com.james.top100;
 
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import com.james.top100.application.TestProperties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
 @Profile("testUnit")
 @Configuration
 class TestUnitConfiguration {
-
   @Bean
-  public TestRestTemplate testRestTemplateBean() {
-    TestRestTemplate testRestTemplate = new TestRestTemplate();
+  @Primary
+  TestProperties testPropertiesBean() {
+    TestProperties testProperties = new TestProperties();
 
-    return testRestTemplate;
+    return testProperties;
   }
 }

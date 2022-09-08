@@ -13,4 +13,14 @@ public class ApplicationProperties {
 
   @Value("${tmdb.api.url}")
   private String apiBaseUrl;
+
+  // TOOD: maybe extract these to their own JwtProperties?
+  @Value("${jwtCookieName}")
+  private String jwtCookieName;
+
+  @Value("${jwtExpirationMs}")
+  private int jwtExpirationMs;
+
+  @Value("${jwtSigningKey}")
+  private String jwtSigningKeyString;
 }

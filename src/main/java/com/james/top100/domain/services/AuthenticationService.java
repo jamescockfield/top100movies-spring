@@ -1,9 +1,11 @@
 package com.james.top100.domain.services;
 
+import java.util.ArrayList;
+
 import com.james.top100.application.requests.LoginRequest;
 import com.james.top100.application.requests.RegisterRequest;
 import com.james.top100.application.security.JwtUtils;
-import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +23,7 @@ public class AuthenticationService {
 
   @Autowired AuthenticationManager authenticationManager;
   @Autowired JwtUtils jwtUtils;
-  @Autowired InMemoryUserDetailsManager userRepository;
+  @Autowired UserDetailsManager userRepository;
   @Autowired PasswordEncoder passwordEncoder;
 
   public ResponseCookie loginAndGetSessionCookie(LoginRequest loginRequest) {
@@ -52,6 +54,7 @@ public class AuthenticationService {
   public boolean registerUser(RegisterRequest registerRequest) {
     String username = registerRequest.getUsername();
 
+    // TODO: need to handle null case here
     if (userRepository.userExists(username)) {
       return false;
     }
