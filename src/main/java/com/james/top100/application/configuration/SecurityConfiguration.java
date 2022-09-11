@@ -1,5 +1,11 @@
 package com.james.top100.application.configuration;
 
+import javax.crypto.SecretKey;
+
+import com.james.top100.application.ApplicationProperties;
+import com.james.top100.application.security.JwtUtils;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,16 +18,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
 
 @EnableWebSecurity
 @Configuration
 class SecurityConfiguration {
-
-  @Bean
-  public PasswordEncoder passwordEncoderBean() {
-    return new BCryptPasswordEncoder();
-  }
 
   @Bean
   public AuthenticationManager authenticationManagerBean(
@@ -40,10 +45,15 @@ class SecurityConfiguration {
   }
 
   @Bean
-  public InMemoryUserDetailsManager inMemoryUserDetailsManagerBean() {
-    InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
+  public UserDetailsManager userDetailsManagerBean() {
+    InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
 
-    return inMemoryUserDetailsManager;
+    return userDetailsManager;
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoderBean() {
+    return new BCryptPasswordEncoder();
   }
 
   @Bean
@@ -61,5 +71,23 @@ class SecurityConfiguration {
     SecurityFilterChain filterChain = http.build();
 
     return filterChain;
+  }
+
+  // @Value("${jwtSigningKey}")
+  // private String jwtSigningKeyString;
+
+  @Autowired
+  ApplicationProperties applicationProperties;
+
+  // TODO: since we are using spring default security instead of jwt, we can consider removing this
+  @Bean
+  JwtParser jwtParserBean() {
+    String jwtKeySigningString = applicationProperties.getJwtSigningKeyString();
+
+    SecretKey jwtSigningKey = JwtUtils.getSigningKeyFromString(jwtKeySigningString);
+
+    JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(jwtSigningKey).build();
+
+    return jwtParser;
   }
 }

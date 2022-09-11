@@ -11,7 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-class AuthTokenFilter extends OncePerRequestFilter {
+// TODO: currently unused, consider removing whole JWT implementation
+public class AuthTokenFilter extends OncePerRequestFilter {
 
   @Autowired JwtUtils jwtUtils;
 

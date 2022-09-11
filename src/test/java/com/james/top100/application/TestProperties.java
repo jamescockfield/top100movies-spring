@@ -8,6 +8,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class TestProperties extends ApplicationProperties {
+  public static final String MOCK_USERNAME = "user";
+
   @Value("${top100.base.url}")
   private String top100BaseUrl;
 }

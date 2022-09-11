@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +24,9 @@ public class AuthenticationService {
 
   @Autowired AuthenticationManager authenticationManager;
   @Autowired JwtUtils jwtUtils;
-  @Autowired UserDetailsManager userRepository;
   @Autowired PasswordEncoder passwordEncoder;
+  @Autowired UserDetailsManager userDetailsManager;
+  @Autowired SecurityFilterChain securityFilterChain;
 
   public ResponseCookie loginAndGetSessionCookie(LoginRequest loginRequest) {
     login(loginRequest);
@@ -55,7 +57,7 @@ public class AuthenticationService {
     String username = registerRequest.getUsername();
 
     // TODO: need to handle null case here
-    if (userRepository.userExists(username)) {
+    if (userDetailsManager.userExists(username)) {
       return false;
     }
 
@@ -64,7 +66,7 @@ public class AuthenticationService {
     // TODO: setup user roles
     User user = new User(username, encodedPassword, new ArrayList<GrantedAuthority>());
 
-    userRepository.createUser(user);
+    userDetailsManager.createUser(user);
 
     return true;
   }

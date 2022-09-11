@@ -30,23 +30,17 @@ public class JwtUtils {
 
   @Autowired Logger logger;
   @Autowired ApplicationProperties applicationProperties;
+  @Autowired JwtParser jwtParser;
 
   private SecretKey jwtSigningKey;
-  private JwtParser jwtParser;
   private String jwtCookieName;
 
   @PostConstruct
   private void postConstruct() {
     jwtCookieName = applicationProperties.getJwtCookieName();
-
-    String jwtKeySigningString = applicationProperties.getJwtSigningKeyString();
-
-    jwtSigningKey = getSigningKeyFromString(jwtKeySigningString);
-
-    jwtParser = Jwts.parserBuilder().setSigningKey(jwtSigningKey).build();
   }
 
-  private SecretKey getSigningKeyFromString(String encodedKey) {
+  public static SecretKey getSigningKeyFromString(String encodedKey) {
     byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
     SecretKey signingKey = new SecretKeySpec(decodedKey, signatureAlgorithm.toString());
 

@@ -36,8 +36,29 @@ testImplementation 'org.springframework:spring-test:6.0.0-M5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-orgjson', version: '0.11.5'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.withType(Test) {
+	  useJUnitPlatform()
+}
+
+sourceSets {
+    // test {
+    //     resources.srcDirs = ["$projectDir/src/test/resources"] // TODO: check if this fixes conf issue
+    // }
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly 
+}
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
 spotless {
