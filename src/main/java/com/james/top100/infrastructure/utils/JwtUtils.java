@@ -1,8 +1,10 @@
-package com.james.top100.application.security;
+package com.james.top100.infrastructure.utils;
 
+import com.james.top100.application.ApplicationProperties;
+import com.james.top100.domain.services.DateService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -14,25 +16,26 @@ import java.util.Base64;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.james.top100.application.ApplicationProperties;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
+// TODO: since we are using spring default security instead of jwt, we can consider removing this
+
 @Component
 public class JwtUtils {
 
   private static final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 
-  @Autowired Logger logger;
-  @Autowired ApplicationProperties applicationProperties;
-  @Autowired JwtParser jwtParser;
+  @Autowired private ApplicationProperties applicationProperties;
+  @Autowired private JwtParser jwtParser;
+  @Autowired private Logger logger;
+  @Autowired private SecretKey jwtSigningKey;
+  @Autowired private JwtBuilderFactory jwtBuilderFactory;
+  @Autowired private DateService dateService;
 
-  private SecretKey jwtSigningKey;
   private String jwtCookieName;
 
   @PostConstruct
@@ -42,7 +45,7 @@ public class JwtUtils {
 
   public static SecretKey getSigningKeyFromString(String encodedKey) {
     byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
-    SecretKey signingKey = new SecretKeySpec(decodedKey, signatureAlgorithm.toString());
+    SecretKey signingKey = new SecretKeySpec(decodedKey, signatureAlgorithm.getJcaName());
 
     return signingKey;
   }
@@ -91,12 +94,14 @@ public class JwtUtils {
   }
 
   private String generateTokenFromUsername(String username) {
-    Date issuedAt = new Date();
     Integer jwtExpirationMs = applicationProperties.getJwtExpirationMs();
-    Date expiration = new Date(new Date().getTime() + jwtExpirationMs);
 
+    Date issuedAt = dateService.getDateNow();
+    Date expiration = dateService.getDateInFuture(jwtExpirationMs);
+
+    JwtBuilder builder = jwtBuilderFactory.getBuilder();
     String token =
-        Jwts.builder()
+        builder
             .setSubject(username)
             .setIssuedAt(issuedAt)
             .setExpiration(expiration)

@@ -1,9 +1,8 @@
 package com.james.top100.application;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @ToString

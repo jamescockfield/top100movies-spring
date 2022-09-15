@@ -1,12 +1,12 @@
-SHELL := /bin/bash
+include .env
 
 run:
-	source .env
+	export
 	./gradlew bootRun
 
 testUnit:
-	SPRING_PROFILES_ACTIVE=testUnit ./gradlew test
+	SPRING_PROFILES_ACTIVE=testUnit ./gradlew test $(if $(method), --tests $(method)) $(if $(debug), --debug-jvm)
 
 testIntegration:
-	source .env
+	export
 	SPRING_PROFILES_ACTIVE=testIntegration ./gradlew integrationTest

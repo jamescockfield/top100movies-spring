@@ -1,11 +1,9 @@
 package com.james.top100.domain.services;
 
-import java.util.ArrayList;
-
 import com.james.top100.application.requests.LoginRequest;
 import com.james.top100.application.requests.RegisterRequest;
-import com.james.top100.application.security.JwtUtils;
-
+import com.james.top100.infrastructure.utils.JwtUtils;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;

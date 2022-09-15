@@ -1,11 +1,12 @@
 package com.james.top100.application.configuration;
 
-import javax.crypto.SecretKey;
-
 import com.james.top100.application.ApplicationProperties;
-import com.james.top100.application.security.JwtUtils;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.james.top100.application.security.AuthTokenFilter;
+import com.james.top100.infrastructure.utils.JwtBuilderFactory;
+import com.james.top100.infrastructure.utils.JwtUtils;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import javax.crypto.SecretKey;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 
 @EnableWebSecurity
 @Configuration
@@ -73,21 +71,33 @@ class SecurityConfiguration {
     return filterChain;
   }
 
-  // @Value("${jwtSigningKey}")
-  // private String jwtSigningKeyString;
+  // TODO: since we are using spring default security instead of jwt, we can consider removing these
 
-  @Autowired
-  ApplicationProperties applicationProperties;
-
-  // TODO: since we are using spring default security instead of jwt, we can consider removing this
   @Bean
-  JwtParser jwtParserBean() {
+  SecretKey jwtSigningKeyBean(ApplicationProperties applicationProperties) {
     String jwtKeySigningString = applicationProperties.getJwtSigningKeyString();
 
     SecretKey jwtSigningKey = JwtUtils.getSigningKeyFromString(jwtKeySigningString);
 
+    return jwtSigningKey;
+  }
+
+  @Bean
+  JwtParser jwtParserBean(SecretKey jwtSigningKey) {
     JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(jwtSigningKey).build();
 
     return jwtParser;
+  }
+
+  @Bean
+  JwtBuilderFactory jwtsBuilderFactoryBean() {
+    return new JwtBuilderFactory();
+  }
+
+  @Bean
+  AuthTokenFilter authTokenFilterBean() {
+    AuthTokenFilter authTokenFilter = new AuthTokenFilter();
+
+    return authTokenFilter;
   }
 }

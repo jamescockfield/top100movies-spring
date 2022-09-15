@@ -1,5 +1,6 @@
 package com.james.top100.application.security;
 
+import com.james.top100.infrastructure.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

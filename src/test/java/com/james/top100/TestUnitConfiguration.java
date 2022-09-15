@@ -1,7 +1,6 @@
 package com.james.top100;
 
 import com.james.top100.application.TestProperties;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

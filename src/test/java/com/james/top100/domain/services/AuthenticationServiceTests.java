@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import com.james.top100.application.requests.LoginRequest;
 import com.james.top100.application.requests.RegisterRequest;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 
 @SpringBootTest
 class AuthenticationServiceTests {
-  
+
   @Autowired AuthenticationService authenticationService;
 
   @MockBean UserDetailsManager userRepository;
@@ -60,6 +59,5 @@ class AuthenticationServiceTests {
     RegisterRequest registerRequest = new RegisterRequest();
 
     authenticationService.registerUser(registerRequest);
-    
   }
 }

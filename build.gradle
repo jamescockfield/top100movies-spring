@@ -57,6 +57,8 @@ configurations {
 }
 
 task integrationTest(type: Test) {
+	group = 'verification'
+	description = 'Runs the integration test suite'
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
 }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Top100ApplicationTestIntegration {
+class Top100ApplicationTest {
   @Test
   void applicationRuns() {
     assertEquals(false, true);
