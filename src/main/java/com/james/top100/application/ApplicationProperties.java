@@ -7,14 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 @Getter
 @ToString
 public class ApplicationProperties {
-
-  @Value("${tmdb.access.token}")
-  private String accessToken;
-
-  @Value("${tmdb.api.url}")
-  private String apiBaseUrl;
-
-  // TOOD: maybe extract these to their own JwtProperties?
+  // TODO: maybe extract these to their own JwtProperties?
   @Value("${jwtCookieName}")
   private String jwtCookieName;
 
@@ -23,4 +16,14 @@ public class ApplicationProperties {
 
   @Value("${jwtSigningKey}")
   private String jwtSigningKeyString;
+  // -----------
+
+  @Value("${tmdb.access.token}")
+  private String accessToken;
+
+  @Value("${tmdb.api.url}")
+  private String apiBaseUrl;
+
+  @Value("${top100.base.url}")
+  private String top100BaseUrl;
 }

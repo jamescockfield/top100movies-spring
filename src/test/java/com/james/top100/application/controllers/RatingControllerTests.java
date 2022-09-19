@@ -2,6 +2,7 @@ package com.james.top100.application.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.james.top100.domain.services.RatingService;
@@ -45,7 +46,7 @@ class RatingControllerTests {
     updatedRatingSetData.put(2, 2);
     RatingSet updatedRatingSet = new RatingSet(username, updatedRatingSetData);
 
-    when(ratingService.updateRatings(username, any())).thenReturn(updatedRatingSet);
+    when(ratingService.updateRatings(eq(username), any())).thenReturn(updatedRatingSet);
 
     ResponseEntity<RatingSet> responseEntity =
         ratingController.updateRatings(user, updatedRatingSetData);
