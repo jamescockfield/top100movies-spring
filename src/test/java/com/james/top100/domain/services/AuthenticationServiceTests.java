@@ -19,7 +19,7 @@ class AuthenticationServiceTests {
 
   @Autowired AuthenticationService authenticationService;
 
-  @MockBean UserDetailsManager userRepository;
+  @MockBean UserDetailsManager userDetailsManager;
 
   String username = "username";
   String password = "password";
@@ -41,7 +41,7 @@ class AuthenticationServiceTests {
 
   @Test
   void registerInvalidatesAlreadyExistingUser() {
-    when(userRepository.userExists(username)).thenReturn(true);
+    when(userDetailsManager.userExists(username)).thenReturn(true);
 
     RegisterRequest registerRequest = new RegisterRequest();
     registerRequest.setUsername(username);
@@ -54,10 +54,14 @@ class AuthenticationServiceTests {
 
   @Test
   void registersUser() {
-    when(userRepository.userExists(username)).thenReturn(false);
+    when(userDetailsManager.userExists(username)).thenReturn(false);
 
     RegisterRequest registerRequest = new RegisterRequest();
+    registerRequest.setUsername(username);
+    registerRequest.setPassword(password);
 
-    authenticationService.registerUser(registerRequest);
+    Boolean userWasRegistered = authenticationService.registerUser(registerRequest);
+
+    assertEquals(true, userWasRegistered);
   }
 }

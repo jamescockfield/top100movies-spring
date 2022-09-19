@@ -54,14 +54,13 @@ public class AuthenticationService {
   public boolean registerUser(RegisterRequest registerRequest) {
     String username = registerRequest.getUsername();
 
-    // TODO: need to handle null case here
-    if (userDetailsManager.userExists(username)) {
+    if (userDetailsManager.userExists(username) != false) {
       return false;
     }
 
     String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
-    // TODO: setup user roles
+    // TODO: add user roles
     User user = new User(username, encodedPassword, new ArrayList<GrantedAuthority>());
 
     userDetailsManager.createUser(user);

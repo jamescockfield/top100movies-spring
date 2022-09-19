@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -16,8 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
   @Autowired JwtUtils jwtUtils;
-
   @Autowired UserDetailsService userDetailsService;
+  @Autowired SecurityContextWrapper securityContextWrapper;
 
   // TODO: migrate from JWT to OAuth
 
@@ -36,7 +35,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
           new UsernamePasswordAuthenticationToken(userDetails, null);
       authentication.setDetails(authenticationDetails);
 
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+      securityContextWrapper.getContext().setAuthentication(authentication);
     }
   }
 

@@ -26,9 +26,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.test.context.support.WithMockUser;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -37,9 +36,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 class AuthTokenFilterTests {
 
   @MockBean JwtUtils mockJwtUtils;
-  @MockBean UserDetailsService mockUserDetailsService;
+  // @MockBean UserDetailsService mockUserDetailsService;
+  @Autowired UserDetailsManager mockUserDetailsService;
+  @MockBean SecurityContextWrapper mockSecurityContextWrapper;
 
-  @MockBean(answer = Answers.CALLS_REAL_METHODS)
+  @Mock(answer = Answers.CALLS_REAL_METHODS)
   SecurityContext mockSecurityContext;
 
   @Mock HttpServletRequest mockRequest;
@@ -53,7 +54,8 @@ class AuthTokenFilterTests {
 
   @BeforeAll
   void beforeAll() {
-    SecurityContextHolder.setContext(mockSecurityContext);
+    when(mockSecurityContextWrapper.getContext()).thenReturn(mockSecurityContext);
+    // SecurityContextHolder.setContext(mockSecurityContext);
   }
 
   @BeforeEach

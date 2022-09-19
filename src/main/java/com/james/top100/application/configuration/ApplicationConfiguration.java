@@ -2,6 +2,7 @@ package com.james.top100.application.configuration;
 
 import com.james.top100.application.ApplicationProperties;
 import com.james.top100.domain.services.DateService;
+import com.james.top100.domain.services.RatingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -39,5 +40,12 @@ class ApplicationConfiguration {
     DateService dateService = new DateService();
 
     return dateService;
+  }
+
+  @Bean
+  public RatingService ratingServiceBean() {
+    RatingService ratingService = new RatingService();
+
+    return ratingService;
   }
 }
